@@ -1,0 +1,53 @@
+- name: get ip
+  vars:
+    ip_list: "{{ ansible_all_ipv4_addresses | ipaddr(internal_net) }}"
+  set_fact:
+    ip_internal: "{{ ip_list | join('\n') }}"
+
+- name: get ca.pem
+  raw: "cat /etc/ssl/etcd/ca.pem | base64 -w 0"
+  register: etcd_ca
+
+- name: get etcd-client.pem
+  raw: "cat /etc/ssl/etcd/etcd-client.pem | base64 -w 0"
+  register: etcd_pem
+
+- name: get etcd-client-key.pem
+  raw: "cat /etc/ssl/etcd/etcd-client-key.pem | base64 -w 0"
+  register: etcd_key
+
+- name: copy calico.yaml
+  template:
+    src: templates/calico.yaml
+    dest: /tmp/calico.yaml
+
+- name: copy rbac.yaml
+  template:
+    src: templates/rbac.yaml
+    dest: /tmp/rbac.yaml
+
+- name: copy kube-proxy.yaml
+  template:
+    src: templates/kube-proxy.yaml
+    dest: /tmp/kube-proxy.yaml
+
+- name: Delete old kube-proxy
+  raw: kubectl delete -f /tmp/kube-proxy.yaml
+  ignore_errors: true
+
+- name: Create kube-proxy
+  raw: kubectl create -f /tmp/kube-proxy.yaml
+
+- name: Delete old RBAC
+  raw: kubectl delete -f /tmp/rbac.yaml
+  ignore_errors: true
+
+- name: Delete old Calico
+  raw: kubectl delete -f /tmp/calico.yaml
+  ignore_errors: true
+
+- name: Create RBAC
+  raw: kubectl create -f /tmp/rbac.yaml
+
+- name: Create Calico
+  raw: kubectl create -f /tmp/calico.yaml

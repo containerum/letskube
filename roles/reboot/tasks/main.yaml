@@ -1,0 +1,8 @@
+- name: reboot host
+  shell: nohup bash -c "sleep 4; systemctl reboot" &
+  async: 0
+  poll: 0
+  ignore_errors: yes
+  become: yes
+  tags:
+    - reboot

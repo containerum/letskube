@@ -1,0 +1,74 @@
+- name: get ip
+  vars:
+    ip_list: "{{ ansible_all_ipv4_addresses | ipaddr(internal_net) }}"
+  set_fact:
+    ip_internal: "{{ ip_list | join('\n') }}"
+
+- name: mkdir /etc/ssl/etcd
+  raw: mkdir -p /etc/ssl/etcd
+  become: yes
+
+- name: import ssl config
+  template: src=templates/openssl.cnf.j2
+        dest="/etc/ssl/etcd/openssl.cnf"
+  become: yes
+
+- name: generate ca key
+  command: openssl genrsa -out ca-key.pem 2048
+  args:
+      chdir: /etc/ssl/etcd/
+  become: yes
+
+- name: generate ca cert
+  command: openssl req -x509 -new -nodes -key ca-key.pem -days 365 -out ca.pem -subj "/CN=etcd-ca"
+  args:
+      chdir: /etc/ssl/etcd/
+  become: yes
+
+- name: generate etcd key
+  command: openssl genrsa -out etcd-key.pem 2048
+  args:
+      chdir: /etc/ssl/etcd/
+  become: yes
+
+- name: generate etcd csr
+  command: openssl req -new -key etcd-key.pem -out etcd.csr -subj "/CN=etcd" -config openssl.cnf
+  args:
+      chdir: /etc/ssl/etcd/
+  become: yes
+
+- name: generate etcd cert
+  command: openssl x509 -req -in etcd.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out etcd.pem -days 365 -extensions v3_req -extfile openssl.cnf
+  args:
+      chdir: /etc/ssl/etcd/
+  become: yes
+
+- name: generate etcd-client key
+  command: openssl genrsa -out etcd-client-key.pem 2048
+  args:
+      chdir: /etc/ssl/etcd/
+  become: yes
+
+- name: generate etcd-client csr
+  command: openssl req -new -key etcd-client-key.pem -out etcd-client.csr -subj "/CN=etcd-client" -config openssl.cnf
+  args:
+      chdir: /etc/ssl/etcd/
+  become: yes
+
+- name: generate etcd-client cert
+  command: openssl x509 -req -in etcd-client.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out etcd-client.pem -days 365 -extensions v3_req -extfile openssl.cnf
+  args:
+      chdir: /etc/ssl/etcd/
+  become: yes
+
+- name: import etcd config
+  template: src=templates/etcd.conf.j2
+        dest="/etc/etcd/etcd.conf"
+  become: yes
+
+- name: Start ETCD service
+  service:
+    name: etcd
+    state: started
+    enabled: yes
+  become: yes

@@ -1,0 +1,14 @@
+- hosts: masters
+  become: true
+  roles:
+    - init_master
+
+- hosts: slaves
+  become: true
+  #strategy: linear
+  roles:
+    - init_slave
+
+- hosts: kubectl
+  roles:
+    - containerum_app

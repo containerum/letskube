@@ -1,0 +1,18 @@
+- hosts: all
+  become: true
+  roles:
+    - selinux
+    - software
+    - etcd
+
+- hosts: masters
+  roles:
+    - init_master
+
+- hosts: slaves
+  roles:
+    - init_slaves
+
+- hosts: kubectl
+  roles:
+    - create_network

@@ -1,0 +1,84 @@
+- name: include epel-release
+  become: yes
+  yum:
+    name: epel-release
+    state: present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  tags:
+    - packages
+
+
+- name: install convenience packages
+  become: yes
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - htop
+    - vim
+    - lsof
+    - strace
+    - yum-plugin-versionlock
+    - ncdu
+  tags:
+    - packages
+
+
+- name: add kubernetes repo
+  become: yes
+  yum_repository:
+    name: Kubernetes
+    description: Kubernetes Repository
+    file: kubernetes
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-$basearch
+    enabled: yes
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+  tags:
+    - packages
+
+
+- name: add docker-ce-stable repo
+  become: yes
+  yum_repository:
+    name: docker-ce-stable
+    description: docker-ce stable repo
+    file: docker-ce-stable
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    enabled: yes
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg
+  tags:
+    - packages
+
+
+- name: upgrade all packages
+  become: yes
+  yum:
+    name: '*'
+    state: latest
+  tags:
+    - packages
+
+
+- name: install docker & kubernetes
+  become: yes
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - docker-ce-17.12.1.ce
+    - kubelet-1.9.7
+    - kubeadm-1.9.7
+    - kubectl-1.9.7
+  tags:
+    - packages
+
+
+- name: versionlock docker & kubernetes
+  become: yes
+  shell: yum versionlock add kubelet-1.9.7 kubectl-1.9.7 kubeadm-1.9.7 docker-ce-17.12.1.ce
+  tags:
+    - packages
