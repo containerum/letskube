@@ -2,40 +2,40 @@
 
 ![Let's Kube](image.png)
 
-**Work in progress** 
+**Work in progress**
 
-Example ansible playbooks for deploying a kubernetes cluster on centos-7 virtual cloud. 
-
-
-**Requerements:**
-
-- ansible >= 2.1  
-- centos-7  
+Ansible playbooks for deploying a Kubernetes cluster on virtual machines with CentOS 7.
 
 
-## Install 
+**Requirements:**
 
-Add our nodes in inventory. 
+- Ansible *2.1 or higher*
+- CentOS 7  
+
+
+## Installation
+
+Add your nodes in inventory.
 
 In group_vars:  
-internal_net - internal subnet for kube-api, etcd, calico 
+internal_net - internal subnet for kube-api, etcd, calico
 
-Start: 
+Start:
 ```
 ansible-playbook bootstrap.yaml -i inventory
 ```
 
 
-## Roadmap 
+## Roadmap
 
 - [x] install docker 17.12.1
 - [x] install kubelet, kubectl, kubeadm 1.9.*
 - [x] install etcd on host
-- [x] init 1 master and many slave
+- [x] init 1 master and multiple slaves
 - [x] make admin.conf
 - [x] install calico
-- [ ] install etcd on many host
+- [ ] install etcd on multiple hosts
 - [ ] backup and restore etcd
-- [ ] init multi master
+- [ ] init multi-master
 - [ ] install flannel, canal
-- [ ] update kubernetes cluster
+- [ ] update Kubernetes cluster
