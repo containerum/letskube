@@ -1,0 +1,17 @@
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+api:
+  advertiseAddress: {{ ip_internal }}
+  bindPort: 6443
+etcd:
+  endpoints:
+  - https://{{ ip_internal }}:2379 
+  caFile: /etc/ssl/etcd/ca.pem
+  certFile: /etc/ssl/etcd/etcd-client.pem
+  keyFile: /etc/ssl/etcd/etcd-client-key.pem
+apiServerCertSANs:
+  - 127.0.0.1
+  - {{ ip_internal }}
+networking:
+  serviceSubnet: 10.96.0.0/12
+  podSubnet: 10.244.0.0/16

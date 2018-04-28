@@ -1,0 +1,7 @@
+- name: Reset kubeadm
+  shell: kubeadm reset
+  become: yes
+
+- name: Join kubeadm
+  shell: "{% for host in groups['masters'] %}{{ hostvars[host]['join_command'] }}{% endfor %}"
+  become: yes

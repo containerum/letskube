@@ -1,0 +1,8 @@
+- name: Disable selinux
+  lineinfile:
+    destfile: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: 'SELINUX=disabled'
+  become: yes
+  tags:
+    - selinux
