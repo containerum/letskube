@@ -11,7 +11,7 @@
 
 - hosts: slaves
   roles:
-    - init_slaves
+    - init_slave
 
 - hosts: kubectl
   roles:
