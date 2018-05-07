@@ -6,3 +6,6 @@
   become: yes
   tags:
     - selinux
+
+- name: swap off
+  raw: swapoff -a
