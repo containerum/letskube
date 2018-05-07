@@ -82,3 +82,19 @@
   shell: yum versionlock add kubelet-1.9.7 kubectl-1.9.7 kubeadm-1.9.7 docker-ce-17.12.1.ce
   tags:
     - packages
+    
+- name: Start docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  become: yes
+
+
+- name: Start kubelet service
+  service:
+    name: kubelet
+    state: started
+    enabled: yes
+  become: yes
+    

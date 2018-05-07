@@ -2,8 +2,8 @@
   shell: kubeadm reset
 
 - name: copy kubeadm.conf
-  copy:
-    src: ./files/kubeadm.conf
+  template:
+    src: templates/kubeadm.conf.j2
     dest: ./kubeadm.conf
     owner: root
     group: root

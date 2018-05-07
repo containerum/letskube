@@ -1,4 +1,11 @@
+- name: install etcd
+  yum:
+    name: etcd
+    state: present
+  become: yes
+
 - name: get ip
+  # internal_net is variable in group_vars
   vars:
     ip_list: "{{ ansible_all_ipv4_addresses | ipaddr(internal_net) }}"
   set_fact:
@@ -65,6 +72,9 @@
   template: src=templates/etcd.conf.j2
         dest="/etc/etcd/etcd.conf"
   become: yes
+
+- name: clean etcd
+  raw: rm -rf /var/lib/etcd/*
 
 - name: Start ETCD service
   service:
