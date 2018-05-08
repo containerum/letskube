@@ -16,7 +16,7 @@
   become: yes
 
 - name: Save token "{{ kubetoken.stdout_lines[-2].strip() }}"
-  local_action: copy content="{{ kubetoken.stdout_lines }}" dest=./kubetoken
+  local_action: copy content="{{ kubetoken.stdout_lines[-2].strip() }}" dest=./kubetoken
 
 - name: Create directory $HOME/.kube
   shell: mkdir -p $HOME/.kube
