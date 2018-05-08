@@ -1,15 +1,15 @@
-kubeone ansible_user=dmitry  ansible_host=10.0.10.50 
-kubetwo  ansible_user=dmitry ansible_host=10.0.10.52 
+node1 ansible_user=  ansible_host=
+node2  ansible_user= ansible_host=
 
 [all:children]
 masters
 slaves
 
 [masters]
-kubeone
+
 
 [slaves]
-kubetwo
+
 
 [kubectl]
-kubeone
+
