@@ -90,6 +90,11 @@
     enabled: yes
   become: yes
 
+- name: cgroup driver
+  raw: sed -i "s/cgroup-driver=systemd/cgroup-driver=cgroupfs/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+
+- name: kubelet daemon-reload
+  raw: systemctl daemon-reload
 
 - name: Start kubelet service
   service:
@@ -97,4 +102,3 @@
     state: started
     enabled: yes
   become: yes
-    

@@ -16,7 +16,7 @@
   become: yes
 
 - name: Save token "{{ kubetoken.stdout_lines[-2].strip() }}"
-  local_action: copy content="{{ kubetoken.stdout_lines[-2].strip() }}" dest=./kubetoken
+  local_action: copy content="{{ kubetoken.stdout_lines }}" dest=./kubetoken
 
 - name: Create directory $HOME/.kube
   shell: mkdir -p $HOME/.kube
@@ -40,10 +40,6 @@
   shell: chown {{ idusergroup.stdout_lines[0] }} {{ homeuser.stdout_lines[0] }}/.kube/config
   become: yes
 
-- name: Reset kubeadm
-  shell: kubeadm reset
-  become: yes
-
-- name: Join kubeadm
-  shell: "{{ kubetoken }}"
-  become: yes
+#- name: Join kubeadm
+#  shell: "{{ kubetoken }}"
+#  become: yes

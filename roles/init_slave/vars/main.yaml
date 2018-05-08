@@ -1,0 +1,1 @@
+kubetoken: "{{ lookup('file', 'kubetoken') }}"
