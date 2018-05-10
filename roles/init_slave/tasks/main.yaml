@@ -2,6 +2,17 @@
   shell: kubeadm reset
   become: yes
 
-- name: Join kubeadm
-  shell: "{% for host in groups['masters'] %}{{ hostvars[host]['join_command'] }}{% endfor %}"
+# fix me later
+#- name: Join kubeadm
+#  shell: "{% for host in groups['masters'] %}{{ hostvars[host]['join_command'] }}{% endfor %}"
+#  become: yes
+
+- name: Delete /etc/kubernetes
+  raw: rm /etc/kubernetes/ -rf
   become: yes
+
+- name: Join kubeadm
+  raw: "{{ kubetoken }}"
+  become: yes
+  vars:
+    kubetoken: "{{ lookup('file', 'kubetoken') }}"
