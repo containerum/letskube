@@ -1,15 +1,15 @@
-m1.train ansible_user=centos ansible_host=172.16.0.1 ansible_port=22
-s1.train  ansible_user=centos ansible_host=172.16.0.2 ansible_port=22
+node1 ansible_user=  ansible_host=
+node2  ansible_user= ansible_host=
 
 [all:children]
 masters
 slaves
 
 [masters]
-m1.train
+
 
 [slaves]
-s1.train
+
 
 [kubectl]
-m1.train
+

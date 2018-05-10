@@ -40,10 +40,6 @@
   shell: chown {{ idusergroup.stdout_lines[0] }} {{ homeuser.stdout_lines[0] }}/.kube/config
   become: yes
 
-- name: Reset kubeadm
-  shell: kubeadm reset
-  become: yes
-
-- name: Join kubeadm
-  shell: "{{ kubetoken }}"
-  become: yes
+#- name: Join kubeadm
+#  shell: "{{ kubetoken }}"
+#  become: yes
