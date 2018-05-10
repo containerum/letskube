@@ -1,8 +1,9 @@
-- name: get ip
-  vars:
-    ip_list: "{{ ansible_all_ipv4_addresses | ipaddr(internal_net) }}"
-  set_fact:
-    ip_internal: "{{ ip_list | join('\n') }}"
+# fix me
+#- name: get ip
+#  vars:
+#    ip_list: "{{ ansible_all_ipv4_addresses | ipaddr(internal_net) }}"
+#  set_fact:
+#    ip_internal: "{{ ip_list | join('\n') }}"
 
 - name: get ca.pem
   raw: "cat /etc/ssl/etcd/ca.pem | base64 -w 0"
