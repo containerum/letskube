@@ -6,7 +6,7 @@ install:
 before_script:
   - python create_droplets.py
   - eval "$(ssh-agent -s)"
-  - echo ${SSH_KEY} | base64 -d > /tmp/id_rsa
+  - echo ${SSH_KEY}  > /tmp/id_rsa
   - chmod 600 /tmp/id_rsa
   - ssh-add /tmp/id_rsa
 script:
