@@ -97,3 +97,5 @@ if __name__ == "__main__":
     inventory = get_inventory(path="inventory")
     change_inventory(inventory, network)
     write_inventory(inventory, path="inventory")
+
+#i just need some changes in file, don't pay attention on this d.t.
