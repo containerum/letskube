@@ -11,4 +11,4 @@
 
 - hosts: kubectl
   roles:
-    - containerum_app
+    - helm
