@@ -76,7 +76,7 @@ def change_inventory(inventory, network):
         node = droplet
         public_ip = network[droplet]['public']
         private_ip = network[droplet]['private']
-        param = "ansible_user=root ansible_host={} ansible_port=22 private_ip={}".format(public_ip, private_ip)
+        param = "ansible_user=root ansible_host={} ansible_port=22 ip_internal={}".format(public_ip, private_ip)
         inventory.set("all", node, param)
 
 
