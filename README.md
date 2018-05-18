@@ -10,14 +10,14 @@ Ansible playbooks for deploying a Kubernetes cluster on virtual machines with Ce
 **Requirements:**
 
 - Ansible *2.1 or higher*
-- CentOS 7  
+- CentOS 7
 
 
 ## Installation
 
 Add your nodes in inventory.
 
-In group_vars:  
+In group_vars:
 internal_net - internal subnet for kube-api, etcd, calico
 
 Start:
