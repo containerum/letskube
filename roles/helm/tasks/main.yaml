@@ -1,0 +1,29 @@
+- name: Install helm client
+  become: yes
+  shell: curl https://raw.githubusercontent.com/kubernetes/helm/v2.9.0/scripts/get > get_helm.sh
+
+- name: Chmod get_helm.sh
+    raw: chmod +x get_helm.sh
+
+- name: Install Helm
+  raw: ./get_helm.sh
+
+- name: Create Service Account for tiller
+  raw: kubectl create serviceaccount tiller --namespace kube-system
+
+- name: Copy rbac-config.yaml
+  copy:
+    src: files/rbac-config.yaml
+    dest: /tmp/rbac-config.yaml
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0644
+
+- name: Create RBAC
+  raw: kubectl create -f /tmp/rbac-config.yaml
+
+- name: Helm Init
+  raw: helm init --service-account tiller
+
+- name: Sleep
+  raw: sleep 30
