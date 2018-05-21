@@ -1,2 +1,2 @@
-internal_net: 10.0.0.0/24
+internal_net: 0.0.0.0/0
 calico_interface: eth1
