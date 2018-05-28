@@ -4,7 +4,7 @@ import time
 import json
 import configparser
 
-def create_droplets(token, tag, ssh_keys):
+def create_droplets(token, build, ssh_keys):
     url = "https://api.digitalocean.com/v2/droplets"
     headers = {"Authorization": "Bearer {}".format(token)}
     data = {"names":
@@ -20,10 +20,13 @@ def create_droplets(token, tag, ssh_keys):
             "ipv6": False,
             "user_data": None,
             "private_networking": True,
-            "tags": ["travis-ci", tag]}
+            "tags": ["travis-ci", "letskube", build]}
     r = requests.post(url, headers=headers, json=data)
     if 200 <= r.status_code < 300:
         print("droplets created")
+    else:
+        print("droplets don't created: %s" % r.status_code)
+        exit(1)
 
 def get_droplets(token, tag):
     url = "https://api.digitalocean.com/v2/droplets"
@@ -71,8 +74,8 @@ def get_inventory(path=None):
         inventory.read(path)
     return inventory
 
-def change_inventory(inventory, network):
-    for droplet in network:
+def change_inventory(inventory, droplets):
+    for droplet in droplets:
         node = droplet
         public_ip = network[droplet]['public']
         private_ip = network[droplet]['private']
@@ -84,18 +87,26 @@ def write_inventory(inventory, path=None):
     with open(path, 'w') as f:
         inventory.write(f)
 
+def write_ip_for_test(droplets, path=None):
+    with open(path, 'w') as f:
+        for droplet in droplets:
+            public_ip = network[droplet]['public']
+            f.write(public_ip + '\n')
+
 def get_env():
     return os.environ['DO_TOKEN'], os.environ['TRAVIS_BUILD_ID'], os.environ['DO_SSH_KEYS']
 
 if __name__ == "__main__":
     token, tag, ssh_keys = get_env()
+    path_to_repos = os.environ['TRAVIS_BUILD_DIR']
+    path_to_inventory = os.path.join(path_to_repos, "inventory")
+    path_to_listip = os.path.join(path_to_repos, ".travis/listip")
 
     create_droplets(token, tag, ssh_keys)
     wait_status(token, tag)
 
     network = get_ip_for_droplets(token, tag)
-    inventory = get_inventory(path="inventory")
+    inventory = get_inventory(path=path_to_inventory)
     change_inventory(inventory, network)
-    write_inventory(inventory, path="inventory")
-
-#i just need some changes in file, don't pay attention on this d.t.
+    write_inventory(inventory, path=path_to_inventory)
+    write_ip_for_test(network, path_to_listip)
