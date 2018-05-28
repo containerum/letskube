@@ -4,7 +4,7 @@ import time
 import json
 import configparser
 
-def create_droplets(token, tag, ssh_keys):
+def create_droplets(token, build, ssh_keys):
     url = "https://api.digitalocean.com/v2/droplets"
     headers = {"Authorization": "Bearer {}".format(token)}
     data = {"names":
@@ -20,7 +20,7 @@ def create_droplets(token, tag, ssh_keys):
             "ipv6": False,
             "user_data": None,
             "private_networking": True,
-            "tags": ["travis-ci", "do_and_travis", tag]}
+            "tags": ["travis-ci", "letskube", build]}
     r = requests.post(url, headers=headers, json=data)
     if 200 <= r.status_code < 300:
         print("droplets created")
@@ -79,7 +79,7 @@ def change_inventory(inventory, droplets):
         node = droplet
         public_ip = network[droplet]['public']
         private_ip = network[droplet]['private']
-        param = "ansible_user=root ansible_host={} ansible_port=22 private_ip={}".format(public_ip, private_ip)
+        param = "ansible_user=root ansible_host={} ansible_port=22 ip_internal={}".format(public_ip, private_ip)
         inventory.set("all", node, param)
 
 
