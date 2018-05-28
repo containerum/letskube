@@ -1,6 +1,6 @@
 [all]
-m1.train  ansible_user=centos ansible_host=172.16.0.1 ansible_port=22 ip_internal=10.0.0.1
-s1.train  ansible_user=centos ansible_host=172.16.0.2 ansible_port=22 ip_internal=10.0.0.2
+m1.train 	 ansible_user=root ansible_host=159.65.37.150 ansible_port=22 ip_internal=10.132.136.65
+s1.train 	 ansible_user=root ansible_host=159.65.37.203 ansible_port=22 ip_internal=10.132.137.28
 
 [masters]
 m1.train
@@ -10,3 +10,4 @@ s1.train
 
 [kubectl]
 m1.train
+

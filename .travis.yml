@@ -17,3 +17,5 @@ script:
   - ansible-playbook bootstrap.yaml -i inventory
 after_script:
   - python .travis/delete_droplets.py
+after_failure:
+  - python .travis/delete_droplets.py
