@@ -7,7 +7,7 @@ env:
 install:
   - pip install -r requirements.txt
 before_script:
-  - python create_droplets.py
+  - python .travis/create_droplets.py
   - eval "$(ssh-agent -s)"
   - echo ${SSH_KEY} | base64 -d > /tmp/id_rsa
   - chmod 600 /tmp/id_rsa
